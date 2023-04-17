@@ -1,0 +1,6 @@
+
+- name: Install Nginx Web Server
+  hosts: all
+  roles:
+    - nginx
+

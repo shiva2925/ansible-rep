@@ -1,0 +1,36 @@
+---
+# tasks file for roles/nginx
+- name: Update nginx page
+  apt:
+    update_cache: yes
+- name: Upgrade the packages
+  apt:
+    name: "*"
+    state: latest
+- name: Install the nginx,ping,route packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - nginx
+    - iputils-ping
+    - iproute2
+- name: Copy index file into /usr/share/nginx/html/index.html
+  copy:
+    src: "index.html"
+    dest: "/usr/share/nginx/html/index.html"
+- name: Copy index file into /var/www/html/index/html
+  copy:
+    src: "index.html"
+    dest: "/var/www/html/index.html"
+- name: update port from 80 to another port number
+  template:
+    src: "default.j2"
+    dest: "/etc/nginx/sites-available/default"
+  notify:
+    - Restart nginx
+- name: Start the nginx Service
+  systemd:
+    name: "nginx"
+    state: started
+        
